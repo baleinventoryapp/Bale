@@ -61,13 +61,12 @@ export default function PartnersPage() {
 	const [error, setError] = useState<string | null>(null);
 	const [showAddPartner, setShowAddPartner] = useState(false);
 
-	const supabase = createClient();
-
 	const fetchPartners = async () => {
 		try {
 			setLoading(true);
 			setError(null);
 
+			const supabase = createClient();
 			const { data, error: fetchError } = await supabase
 				.from('partners')
 				.select('*')

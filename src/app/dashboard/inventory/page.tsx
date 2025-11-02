@@ -32,13 +32,12 @@ export default function InventoryPage() {
 	const [error, setError] = useState<string | null>(null);
 	const [showAddProduct, setShowAddProduct] = useState(false);
 
-	const supabase = createClient();
-
 	const fetchProducts = async () => {
 		try {
 			setLoading(true);
 			setError(null);
 
+			const supabase = createClient();
 			const { data, error: fetchError } = await supabase
 				.from('products')
 				.select('*')

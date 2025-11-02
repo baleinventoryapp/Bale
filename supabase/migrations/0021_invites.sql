@@ -3,7 +3,7 @@
 -- =====================================================
 
 CREATE TABLE invites (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT extensions.uuid_generate_v4(),
     
     -- Token identification
     token VARCHAR(255) UNIQUE NOT NULL,

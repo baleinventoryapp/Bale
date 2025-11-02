@@ -38,8 +38,6 @@ export function AddStaffSheet({ open, onOpenChange, onStaffAdded }: AddStaffShee
 	const [warehouses, setWarehouses] = useState<WarehouseRow[]>([]);
 	const [loadingWarehouses, setLoadingWarehouses] = useState(false);
 
-	const supabase = createClient();
-
 	// Fetch warehouses when sheet opens
 	useEffect(() => {
 		if (open) {
@@ -50,6 +48,7 @@ export function AddStaffSheet({ open, onOpenChange, onStaffAdded }: AddStaffShee
 	const fetchWarehouses = async () => {
 		try {
 			setLoadingWarehouses(true);
+			const supabase = createClient();
 			const { data, error } = await supabase
 				.from('warehouses')
 				.select('*')

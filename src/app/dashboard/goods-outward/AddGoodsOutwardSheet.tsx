@@ -39,8 +39,6 @@ export function AddGoodsOutwardSheet({
 	const [saving, setSaving] = useState(false);
 	const [saveError, setSaveError] = useState<string | null>(null);
 
-	const supabase = createClient();
-
 	// Details form state
 	const [detailsFormData, setDetailsFormData] = useState<DetailsFormData>({
 		dispatchToType: 'partner',
@@ -86,6 +84,7 @@ export function AddGoodsOutwardSheet({
 		setSaveError(null);
 
 		try {
+			const supabase = createClient();
 			const currentUser = await getCurrentUser();
 			if (!currentUser || !currentUser.company_id) {
 				throw new Error('User not found');

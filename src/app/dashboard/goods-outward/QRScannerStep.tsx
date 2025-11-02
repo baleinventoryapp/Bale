@@ -32,7 +32,6 @@ export function QRScannerStep({
 	const [torch, setTorch] = useState(false);
 	const [paused, setPaused] = useState(false);
 	const [showInventorySheet, setShowInventorySheet] = useState(false);
-	const supabase = createClient();
 
 	const handleScan = async (detectedCodes: any[]) => {
 		if (paused || detectedCodes.length === 0) return;
@@ -58,6 +57,7 @@ export function QRScannerStep({
 
 		// Fetch stock unit from database by ID
 		try {
+			const supabase = createClient();
 			const { data: stockUnit, error: stockError } = await supabase
 				.from('stock_units')
 				.select('*')

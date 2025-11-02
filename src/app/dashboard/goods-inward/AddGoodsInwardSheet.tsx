@@ -57,8 +57,6 @@ export function AddGoodsInwardSheet({
 		documentFile: null,
 	});
 
-	const supabase = createClient();
-
 	// Load products on mount
 	useEffect(() => {
 		if (open) {
@@ -69,6 +67,7 @@ export function AddGoodsInwardSheet({
 	const loadProducts = async () => {
 		setLoading(true);
 		try {
+			const supabase = createClient();
 			const { data, error } = await supabase
 				.from('products')
 				.select('*')
@@ -210,6 +209,7 @@ export function AddGoodsInwardSheet({
 		setSaveError(null);
 
 		try {
+			const supabase = createClient();
 			const currentUser = await getCurrentUser();
 			if (!currentUser || !currentUser.company_id) {
 				throw new Error('User not found');

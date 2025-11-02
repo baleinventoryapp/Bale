@@ -21,8 +21,6 @@ export function SelectInventorySheet({
 	const [products, setProducts] = useState<Tables<'products'>[]>([]);
 	const [loading, setLoading] = useState(false);
 
-	const supabase = createClient();
-
 	// Load products on mount
 	useEffect(() => {
 		if (open) {
@@ -33,6 +31,7 @@ export function SelectInventorySheet({
 	const loadProducts = async () => {
 		setLoading(true);
 		try {
+			const supabase = createClient();
 			const { data, error } = await supabase
 				.from('products')
 				.select('*')

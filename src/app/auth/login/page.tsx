@@ -1,13 +1,13 @@
 'use client';
 
 import { createClient } from '@/lib/supabase/client';
-import { useState, useEffect } from 'react';
+import { useState, Suspense } from 'react';
 import Image from 'next/image';
 import { IconBrandGoogleFilled } from '@tabler/icons-react';
 import { Button } from '@/components/ui/button';
 import { useSearchParams } from 'next/navigation';
 
-export default function LoginPage() {
+function LoginForm() {
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState('');
 	const searchParams = useSearchParams();
@@ -93,5 +93,17 @@ export default function LoginPage() {
 				</Button>
 			</div>
 		</div>
+	);
+}
+
+export default function LoginPage() {
+	return (
+		<Suspense fallback={
+			<div className="min-h-screen flex items-center justify-center">
+				<div className="w-6 h-6 border-2 border-gray-400 border-t-transparent rounded-full animate-spin" />
+			</div>
+		}>
+			<LoginForm />
+		</Suspense>
 	);
 }

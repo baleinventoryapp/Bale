@@ -36,13 +36,12 @@ export default function StaffPage() {
 	const [error, setError] = useState<string | null>(null);
 	const [showAddStaff, setShowAddStaff] = useState(false);
 
-	const supabase = createClient();
-
 	const fetchStaff = async () => {
 		try {
 			setLoading(true);
 			setError(null);
 
+			const supabase = createClient();
 			const { data, error: fetchError } = await supabase
 				.from('users')
 				.select(`

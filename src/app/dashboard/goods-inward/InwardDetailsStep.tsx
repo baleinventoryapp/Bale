@@ -36,12 +36,11 @@ export function InwardDetailsStep({ formData, onChange }: DetailsStepProps) {
 	const [loading, setLoading] = useState(true);
 	const [showAdditionalDetails, setShowAdditionalDetails] = useState(false);
 
-	const supabase = createClient();
-
 	useEffect(() => {
 		const fetchData = async () => {
 			setLoading(true);
 			try {
+				const supabase = createClient();
 				// Fetch partners (suppliers and vendors)
 				const { data: partnersData } = await supabase
 					.from('partners')
