@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { IconPhone, IconMapPin } from '@tabler/icons-react';
+import { IconPhone, IconMapPin, IconUsers } from '@tabler/icons-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { RadioGroup as RadioGroupPills, RadioGroupItem as RadioGroupItemPills } from '@/components/ui/radio-group-pills';
@@ -60,6 +60,34 @@ export function AddStaffSheet({ open, onOpenChange, onStaffAdded }: AddStaffShee
 			console.error('Error fetching warehouses:', error);
 		} finally {
 			setLoadingWarehouses(false);
+		}
+	};
+
+	const handleSelectContact = async () => {
+		try {
+			// Check if Contact Picker API is supported
+			if ('contacts' in navigator && 'ContactsManager' in window) {
+				const props = ['tel'];
+				const opts = { multiple: false };
+
+				// @ts-ignore - ContactsManager API not in TypeScript types yet
+				const contacts = await navigator.contacts.select(props, opts);
+
+				if (contacts && contacts.length > 0) {
+					const contact = contacts[0];
+					if (contact.tel && contact.tel.length > 0) {
+						// Get the first phone number and clean it
+						const phoneNumber = contact.tel[0];
+						setFormData({ ...formData, phoneNumber });
+					}
+				}
+			} else {
+				// Fallback: show alert that feature is not supported
+				alert('Contact picker is not supported on this device. Please enter the phone number manually.');
+			}
+		} catch (error) {
+			// User cancelled or error occurred
+			console.log('Contact selection cancelled or error:', error);
 		}
 	};
 
@@ -173,18 +201,29 @@ export function AddStaffSheet({ open, onOpenChange, onStaffAdded }: AddStaffShee
 								<label className="text-sm font-medium text-gray-700">
 									Phone Number <span className="text-red-600">*</span>
 								</label>
-								<div className="relative">
-									<IconPhone className="absolute left-4 top-1/2 -translate-y-1/2 size-5 text-gray-500" />
-									<Input
-										type="tel"
-										placeholder="Enter phone number"
-										value={formData.phoneNumber}
-										onChange={(e) =>
-											setFormData({ ...formData, phoneNumber: e.target.value })
-										}
-										className="pl-12"
-										required
-									/>
+								<div className="flex gap-2">
+									<div className="relative flex-1">
+										<IconPhone className="absolute left-4 top-1/2 -translate-y-1/2 size-5 text-gray-500" />
+										<Input
+											type="tel"
+											placeholder="Enter phone number"
+											value={formData.phoneNumber}
+											onChange={(e) =>
+												setFormData({ ...formData, phoneNumber: e.target.value })
+											}
+											className="pl-12"
+											required
+										/>
+									</div>
+									<Button
+										type="button"
+										variant="outline"
+										onClick={handleSelectContact}
+										className="shrink-0"
+										title="Select from contacts"
+									>
+										<IconUsers className="size-5" />
+									</Button>
 								</div>
 							</div>
 
