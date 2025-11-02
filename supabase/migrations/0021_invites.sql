@@ -13,7 +13,7 @@ CREATE TABLE invites (
     
     -- Invitation details
     role VARCHAR(20) NOT NULL CHECK (role IN ('admin', 'staff')),
-    warehouse_id UUID NOT NULL REFERENCES warehouses(id) ON DELETE CASCADE,
+    warehouse_id UUID REFERENCES warehouses(id) ON DELETE CASCADE, -- Nullable for admin invites
     
     -- Usage tracking
     used_at TIMESTAMPTZ,

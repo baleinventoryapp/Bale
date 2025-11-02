@@ -93,14 +93,14 @@ export function AddStaffSheet({ open, onOpenChange, onStaffAdded }: AddStaffShee
 			expiresAt.setDate(expiresAt.getDate() + 7); // 7 days expiry
 
 			// Insert invite record
-			const inviteInsert: TablesInsert<'invites'> = {
+			const inviteInsert = {
 				company_id: currentUser.company_id,
 				warehouse_id: formData.warehouseId || null, // Fix: Convert empty string to null for admin
 				role: formData.role,
 				token: token,
 				expires_at: expiresAt.toISOString(),
 				created_by: currentUser.id,
-			};
+			} as TablesInsert<'invites'>;
 
 			const { data: invite, error: insertError } = await supabase
 				.from('invites')
