@@ -95,7 +95,7 @@ export function AddStaffSheet({ open, onOpenChange, onStaffAdded }: AddStaffShee
 			// Insert invite record
 			const inviteInsert: TablesInsert<'invites'> = {
 				company_id: currentUser.company_id,
-				warehouse_id: formData.warehouseId,
+				warehouse_id: formData.warehouseId || null, // Fix: Convert empty string to null for admin
 				role: formData.role,
 				token: token,
 				expires_at: expiresAt.toISOString(),
@@ -113,13 +113,24 @@ export function AddStaffSheet({ open, onOpenChange, onStaffAdded }: AddStaffShee
 			// Generate invite link
 			const inviteUrl = `${window.location.origin}/invite/${token}`;
 
-			// TODO: Send SMS/WhatsApp to phone number with invite link
-			console.log('Send invite to:', formData.phoneNumber);
-			console.log('Invite URL:', inviteUrl);
+			// Get company name for message
+			const { data: company } = await supabase
+				.from('companies')
+				.select('name')
+				.eq('id', currentUser.company_id)
+				.single();
 
-			// For now, just copy to clipboard
-			await navigator.clipboard.writeText(inviteUrl);
-			alert(`Invite link copied to clipboard!\nSend this to ${formData.phoneNumber}:\n${inviteUrl}`);
+			const companyName = company?.name || 'our team';
+
+			// Prepare WhatsApp message
+			const whatsappMessage = `Hi! You've been invited to join *${companyName}* on Bale.\n\nClick the link below to register:\n${inviteUrl}\n\n_This link expires in 7 days._`;
+
+			// Clean phone number (remove spaces, dashes, etc.)
+			const cleanPhone = formData.phoneNumber.replace(/\D/g, '');
+
+			// Open WhatsApp with pre-filled message
+			const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(whatsappMessage)}`;
+			window.open(whatsappUrl, '_blank');
 
 			// Success! Close sheet and notify parent
 			handleCancel();
