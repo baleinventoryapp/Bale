@@ -8,16 +8,19 @@ import {
 	IconClipboardList,
 	IconExternalLink,
 	IconIdBadge2,
+	IconLogout,
 	IconPhotoScan,
 	IconQrcode,
 	IconSettings,
 	IconUsers,
 } from '@tabler/icons-react';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { createClient } from '@/lib/supabase/client';
 import {
 	Sidebar,
 	SidebarContent,
+	SidebarFooter,
 	SidebarHeader,
 	SidebarMenu,
 	SidebarMenuButton,
@@ -73,6 +76,20 @@ const NAV_ITEMS: NavItem[] = [
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	const pathname = usePathname();
+	const router = useRouter();
+	const [isLoggingOut, setIsLoggingOut] = React.useState(false);
+
+	const handleLogout = async () => {
+		try {
+			setIsLoggingOut(true);
+			const supabase = createClient();
+			await supabase.auth.signOut();
+			router.push('/auth/login');
+		} catch (error) {
+			console.error('Error logging out:', error);
+			setIsLoggingOut(false);
+		}
+	};
 
 	return (
 		<Sidebar {...props}>
@@ -123,6 +140,21 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 					})}
 				</SidebarMenu>
 			</SidebarContent>
+			<SidebarFooter>
+				<SidebarMenu>
+					<SidebarMenuItem>
+						<SidebarMenuButton
+							onClick={handleLogout}
+							disabled={isLoggingOut}
+							size='lg'
+							className='text-base [&>svg]:size-5 p-4 gap-3 text-red-600 hover:text-red-700 hover:bg-red-50'
+						>
+							<IconLogout />
+							<span>{isLoggingOut ? 'Logging out...' : 'Logout'}</span>
+						</SidebarMenuButton>
+					</SidebarMenuItem>
+				</SidebarMenu>
+			</SidebarFooter>
 			<SidebarRail />
 		</Sidebar>
 	)
