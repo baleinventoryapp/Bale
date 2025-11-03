@@ -55,7 +55,7 @@ export function AddProductSheet({ open, onOpenChange, onProductAdded }: AddProdu
 		gsm: '',
 		threadCount: '',
 		tags: '',
-		measuringUnit: 'meters',
+		measuringUnit: 'Meters',
 		costPrice: '',
 		sellingPrice: '',
 		minStockAlert: false,
@@ -250,7 +250,7 @@ export function AddProductSheet({ open, onOpenChange, onProductAdded }: AddProdu
 			gsm: '',
 			threadCount: '',
 			tags: '',
-			measuringUnit: 'meters',
+			measuringUnit: 'Meters',
 			costPrice: '',
 			sellingPrice: '',
 			minStockAlert: false,
@@ -310,11 +310,11 @@ export function AddProductSheet({ open, onOpenChange, onProductAdded }: AddProdu
 									<SelectValue placeholder="Unit *" />
 								</SelectTrigger>
 								<SelectContent>
-									<SelectItem value="meters">Meters</SelectItem>
-									<SelectItem value="yards">Yards</SelectItem>
-									<SelectItem value="pieces">Pieces</SelectItem>
-									<SelectItem value="kg">Kilograms</SelectItem>
-									<SelectItem value="rolls">Rolls</SelectItem>
+									<SelectItem value="Meters">Meters</SelectItem>
+									<SelectItem value="Yards">Yards</SelectItem>
+									<SelectItem value="Pieces">Pieces</SelectItem>
+									<SelectItem value="Kilograms">Kilograms</SelectItem>
+									<SelectItem value="Rolls">Rolls</SelectItem>
 								</SelectContent>
 							</Select>
 						</div>
