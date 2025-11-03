@@ -41,6 +41,14 @@ export function InwardDetailsStep({ formData, onChange }: DetailsStepProps) {
 			setLoading(true);
 			try {
 				const supabase = createClient();
+				// Fetch ALL partners first to see what we have
+				const { data: allPartners } = await supabase
+					.from('partners')
+					.select('id, first_name, last_name, partner_type')
+					.order('first_name', { ascending: true });
+
+				console.log('ALL partners in database:', allPartners);
+
 				// Fetch partners (suppliers and vendors)
 				const { data: partnersData, error: partnersError } = await supabase
 					.from('partners')
@@ -48,7 +56,7 @@ export function InwardDetailsStep({ formData, onChange }: DetailsStepProps) {
 					.in('partner_type', ['supplier', 'vendor'])
 					.order('first_name', { ascending: true });
 
-				console.log('Partners fetch result:', { partnersData, partnersError, count: partnersData?.length });
+				console.log('Filtered partners (supplier/vendor):', { partnersData, partnersError, count: partnersData?.length });
 
 				// Fetch warehouses
 				const { data: warehousesData, error: warehousesError } = await supabase
