@@ -187,9 +187,8 @@ export function AddGoodsInwardSheet({
 
 	// Check if form is valid for submission
 	const canSubmit = useMemo(() =>
-		detailsFormData.receivedFromId !== '' &&
 		products.some(p => p.units.length > 0),
-		[detailsFormData.receivedFromId, products]
+		[products]
 	);
 
 	const handleNext = () => {
@@ -243,8 +242,8 @@ export function AddGoodsInwardSheet({
 				inward_type: inwardTypeMap[detailsFormData.linkToType],
 				inward_date: detailsFormData.inwardDate || null,
 				invoice_number: detailsFormData.invoiceNumber || null,
-				partner_id: detailsFormData.receivedFromType === 'partner' ? detailsFormData.receivedFromId : null,
-				from_warehouse_id: detailsFormData.receivedFromType === 'warehouse' ? detailsFormData.receivedFromId : null,
+				partner_id: detailsFormData.receivedFromType === 'partner' && detailsFormData.receivedFromId ? detailsFormData.receivedFromId : null,
+				from_warehouse_id: detailsFormData.receivedFromType === 'warehouse' && detailsFormData.receivedFromId ? detailsFormData.receivedFromId : null,
 				job_work_id: detailsFormData.linkToType === 'job_work' ? detailsFormData.linkToValue || null : null,
 				sales_order_id: detailsFormData.linkToType === 'sales_return' ? detailsFormData.linkToValue || null : null,
 				other_reason: detailsFormData.linkToType === 'other' ? detailsFormData.linkToValue || null : null,
