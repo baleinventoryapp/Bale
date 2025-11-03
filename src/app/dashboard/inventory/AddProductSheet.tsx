@@ -156,14 +156,14 @@ export function AddProductSheet({ open, onOpenChange, onProductAdded }: AddProdu
 				show_on_catalog: formData.showOnCatalog,
 				material: formData.material || null,
 				color: formData.color || null,
-				gsm: formData.gsm ? parseFloat(formData.gsm) : null,
-				thread_count_cm: formData.threadCount ? parseFloat(formData.threadCount) : null,
+				gsm: formData.gsm ? parseInt(formData.gsm, 10) : null,
+				thread_count_cm: formData.threadCount ? parseInt(formData.threadCount, 10) : null,
 				tags: tagsArray,
 				measuring_unit: formData.measuringUnit,
 				cost_price_per_unit: formData.costPrice ? parseFloat(formData.costPrice) : null,
 				selling_price_per_unit: formData.sellingPrice ? parseFloat(formData.sellingPrice) : null,
 				min_stock_alert: formData.minStockAlert,
-				min_stock_threshold: formData.minStockThreshold ? parseFloat(formData.minStockThreshold) : null,
+				min_stock_threshold: formData.minStockThreshold ? parseInt(formData.minStockThreshold, 10) : null,
 				hsn_code: formData.hsnCode || null,
 				notes: formData.notes || null,
 				created_by: currentUser.id,
@@ -176,7 +176,11 @@ export function AddProductSheet({ open, onOpenChange, onProductAdded }: AddProdu
 				.select()
 				.single();
 
-			if (insertError) throw insertError;
+			if (insertError) {
+				console.error('Supabase insert error:', insertError);
+				console.error('Product data being inserted:', productInsert);
+				throw insertError;
+			}
 
 			// Upload images if provided
 			if (formData.images.length > 0 && product) {
@@ -211,7 +215,25 @@ export function AddProductSheet({ open, onOpenChange, onProductAdded }: AddProdu
 			}
 		} catch (error) {
 			console.error('Error saving product:', error);
-			setSaveError(error instanceof Error ? error.message : 'Failed to save product');
+
+			// Extract more detailed error information
+			let errorMessage = 'Failed to save product';
+			if (error && typeof error === 'object') {
+				const err = error as any;
+				if (err.message) {
+					errorMessage = err.message;
+				}
+				if (err.details) {
+					errorMessage += `: ${err.details}`;
+				}
+				if (err.hint) {
+					errorMessage += ` (${err.hint})`;
+				}
+			} else if (error instanceof Error) {
+				errorMessage = error.message;
+			}
+
+			setSaveError(errorMessage);
 		} finally {
 			setSaving(false);
 		}
