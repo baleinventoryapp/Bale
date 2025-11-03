@@ -42,17 +42,21 @@ export function InwardDetailsStep({ formData, onChange }: DetailsStepProps) {
 			try {
 				const supabase = createClient();
 				// Fetch partners (suppliers and vendors)
-				const { data: partnersData } = await supabase
+				const { data: partnersData, error: partnersError } = await supabase
 					.from('partners')
 					.select('*')
 					.in('partner_type', ['supplier', 'vendor'])
 					.order('first_name', { ascending: true });
 
+				console.log('Partners fetch result:', { partnersData, partnersError, count: partnersData?.length });
+
 				// Fetch warehouses
-				const { data: warehousesData } = await supabase
+				const { data: warehousesData, error: warehousesError } = await supabase
 					.from('warehouses')
 					.select('*')
 					.order('name', { ascending: true });
+
+				console.log('Warehouses fetch result:', { warehousesData, warehousesError, count: warehousesData?.length });
 
 				// Fetch job works
 				const { data: jobWorksData } = await supabase
