@@ -48,13 +48,23 @@ export function InwardDetailsStep({ formData, onChange }: DetailsStepProps) {
 				}
 
 				// Fetch partners (suppliers and vendors)
-				const { data: partnersData } = await supabase
+				const { data: suppliersData } = await supabase
 					.from('partners')
 					.select('*')
 					.eq('company_id', currentUser.company_id)
-					.in('partner_type', ['supplier', 'vendor'])
+					.eq('partner_type', 'supplier')
+					.is('deleted_at', null)
+					.order('first_name', { ascending: true});
+
+				const { data: vendorsData } = await supabase
+					.from('partners')
+					.select('*')
+					.eq('company_id', currentUser.company_id)
+					.eq('partner_type', 'vendor')
 					.is('deleted_at', null)
 					.order('first_name', { ascending: true });
+
+				const partnersData = [...(suppliersData || []), ...(vendorsData || [])];
 
 				// Fetch warehouses
 				const { data: warehousesData } = await supabase
