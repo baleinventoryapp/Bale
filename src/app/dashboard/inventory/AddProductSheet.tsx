@@ -39,17 +39,23 @@ interface ProductFormData {
 	images: File[];
 }
 
+// Generate unique product number with timestamp
+const generateProductNumber = () => {
+	const timestamp = Date.now().toString().slice(-6);
+	return `PROD-${timestamp}`;
+};
+
 export function AddProductSheet({ open, onOpenChange, onProductAdded }: AddProductSheetProps) {
 	const [formData, setFormData] = useState<ProductFormData>({
 		name: '',
-		productNumber: 'PROD-001',
+		productNumber: generateProductNumber(),
 		showOnCatalog: true,
 		material: '',
 		color: '',
 		gsm: '',
 		threadCount: '',
 		tags: '',
-		measuringUnit: '',
+		measuringUnit: 'meters',
 		costPrice: '',
 		sellingPrice: '',
 		minStockAlert: false,
@@ -118,6 +124,17 @@ export function AddProductSheet({ open, onOpenChange, onProductAdded }: AddProdu
 		setSaveError(null);
 
 		try {
+			// Validate required fields
+			if (!formData.name.trim()) {
+				throw new Error('Product name is required');
+			}
+			if (!formData.productNumber.trim()) {
+				throw new Error('Product number is required');
+			}
+			if (!formData.measuringUnit) {
+				throw new Error('Measuring unit is required');
+			}
+
 			const supabase = createClient();
 
 			// Get current user
@@ -204,14 +221,14 @@ export function AddProductSheet({ open, onOpenChange, onProductAdded }: AddProdu
 		// Reset form
 		setFormData({
 			name: '',
-			productNumber: 'PROD-001',
+			productNumber: generateProductNumber(),
 			showOnCatalog: true,
 			material: '',
 			color: '',
 			gsm: '',
 			threadCount: '',
 			tags: '',
-			measuringUnit: '',
+			measuringUnit: 'meters',
 			costPrice: '',
 			sellingPrice: '',
 			minStockAlert: false,
@@ -222,6 +239,7 @@ export function AddProductSheet({ open, onOpenChange, onProductAdded }: AddProdu
 		});
 		setImagePreviews([]);
 		setImageError(null);
+		setSaveError(null);
 		onOpenChange(false);
 	};
 
@@ -247,6 +265,36 @@ export function AddProductSheet({ open, onOpenChange, onProductAdded }: AddProdu
 								}
 								required
 							/>
+
+							{/* Product Number */}
+							<Input
+								placeholder="Product number"
+								value={formData.productNumber}
+								onChange={(e) =>
+									setFormData({ ...formData, productNumber: e.target.value })
+								}
+								required
+							/>
+
+							{/* Measuring Unit */}
+							<Select
+								value={formData.measuringUnit}
+								onValueChange={(value) =>
+									setFormData({ ...formData, measuringUnit: value })
+								}
+								required
+							>
+								<SelectTrigger>
+									<SelectValue placeholder="Unit *" />
+								</SelectTrigger>
+								<SelectContent>
+									<SelectItem value="meters">Meters</SelectItem>
+									<SelectItem value="yards">Yards</SelectItem>
+									<SelectItem value="pieces">Pieces</SelectItem>
+									<SelectItem value="kg">Kilograms</SelectItem>
+									<SelectItem value="rolls">Rolls</SelectItem>
+								</SelectContent>
+							</Select>
 						</div>
 
 						{/* Features & Images Section */}
@@ -408,25 +456,6 @@ export function AddProductSheet({ open, onOpenChange, onProductAdded }: AddProdu
 
 							<CollapsibleContent>
 								<div className="flex flex-col gap-6">
-									{/* Measuring Unit */}
-									<Select
-										value={formData.measuringUnit}
-										onValueChange={(value) =>
-											setFormData({ ...formData, measuringUnit: value })
-										}
-									>
-										<SelectTrigger>
-											<SelectValue placeholder="Unit" />
-										</SelectTrigger>
-										<SelectContent>
-											<SelectItem value="meters">Meters</SelectItem>
-											<SelectItem value="yards">Yards</SelectItem>
-											<SelectItem value="pieces">Pieces</SelectItem>
-											<SelectItem value="kg">Kilograms</SelectItem>
-											<SelectItem value="rolls">Rolls</SelectItem>
-										</SelectContent>
-									</Select>
-
 									{/* Purchase & Sale Price */}
 									<div className="flex gap-4">
 										<Input
