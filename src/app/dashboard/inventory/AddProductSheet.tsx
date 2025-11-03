@@ -345,11 +345,11 @@ export function AddProductSheet({ open, onOpenChange, onProductAdded }: AddProdu
 											<SelectValue placeholder="Material" />
 										</SelectTrigger>
 										<SelectContent>
-											<SelectItem value="silk">Silk</SelectItem>
-											<SelectItem value="cotton">Cotton</SelectItem>
-											<SelectItem value="wool">Wool</SelectItem>
-											<SelectItem value="polyester">Polyester</SelectItem>
-											<SelectItem value="linen">Linen</SelectItem>
+											<SelectItem value="Silk">Silk</SelectItem>
+											<SelectItem value="Cotton">Cotton</SelectItem>
+											<SelectItem value="Wool">Wool</SelectItem>
+											<SelectItem value="Polyester">Polyester</SelectItem>
+											<SelectItem value="Linen">Linen</SelectItem>
 										</SelectContent>
 									</Select>
 
@@ -364,12 +364,12 @@ export function AddProductSheet({ open, onOpenChange, onProductAdded }: AddProdu
 											<SelectValue placeholder="Color" />
 										</SelectTrigger>
 										<SelectContent>
-											<SelectItem value="red">Red</SelectItem>
-											<SelectItem value="blue">Blue</SelectItem>
-											<SelectItem value="green">Green</SelectItem>
-											<SelectItem value="yellow">Yellow</SelectItem>
-											<SelectItem value="black">Black</SelectItem>
-											<SelectItem value="white">White</SelectItem>
+											<SelectItem value="Red">Red</SelectItem>
+											<SelectItem value="Blue">Blue</SelectItem>
+											<SelectItem value="Green">Green</SelectItem>
+											<SelectItem value="Yellow">Yellow</SelectItem>
+											<SelectItem value="Black">Black</SelectItem>
+											<SelectItem value="White">White</SelectItem>
 										</SelectContent>
 									</Select>
 
