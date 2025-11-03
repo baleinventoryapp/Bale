@@ -8,7 +8,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group-pills';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { DatePicker } from '@/components/ui/date-picker';
-import { createClient, getCurrentUser } from '@/lib/supabase/client';
+import { createClient } from '@/lib/supabase/client';
 import type { Tables } from '@/types/database/supabase';
 import { dateToISOString } from '@/lib/utils/date';
 
@@ -41,61 +41,29 @@ export function InwardDetailsStep({ formData, onChange }: DetailsStepProps) {
 			setLoading(true);
 			try {
 				const supabase = createClient();
-				const currentUser = await getCurrentUser();
-
-				if (!currentUser || !currentUser.company_id) {
-					throw new Error('User not found');
-				}
-
 				// Fetch partners (suppliers and vendors)
-				const { data: suppliersData, error: suppliersError } = await supabase
+				const { data: partnersData } = await supabase
 					.from('partners')
 					.select('*')
-					.eq('company_id', currentUser.company_id)
-					.eq('partner_type', 'supplier')
-					.is('deleted_at', null)
+					.in('partner_type', ['supplier', 'vendor'])
 					.order('first_name', { ascending: true });
-
-				if (suppliersError) {
-					console.error('Error fetching suppliers:', suppliersError);
-				}
-
-				const { data: vendorsData, error: vendorsError } = await supabase
-					.from('partners')
-					.select('*')
-					.eq('company_id', currentUser.company_id)
-					.eq('partner_type', 'vendor')
-					.is('deleted_at', null)
-					.order('first_name', { ascending: true });
-
-				if (vendorsError) {
-					console.error('Error fetching vendors:', vendorsError);
-				}
-
-				const partnersData = [...(suppliersData || []), ...(vendorsData || [])];
 
 				// Fetch warehouses
 				const { data: warehousesData } = await supabase
 					.from('warehouses')
 					.select('*')
-					.eq('company_id', currentUser.company_id)
-					.is('deleted_at', null)
 					.order('name', { ascending: true });
 
 				// Fetch job works
 				const { data: jobWorksData } = await supabase
 					.from('job_works')
 					.select('id, job_work_number')
-					.eq('company_id', currentUser.company_id)
-					.is('deleted_at', null)
 					.order('created_at', { ascending: false });
 
 				// Fetch sales orders
 				const { data: salesOrdersData } = await supabase
 					.from('sales_orders')
 					.select('id, order_number')
-					.eq('company_id', currentUser.company_id)
-					.is('deleted_at', null)
 					.order('created_at', { ascending: false });
 
 				setPartners(partnersData || []);
