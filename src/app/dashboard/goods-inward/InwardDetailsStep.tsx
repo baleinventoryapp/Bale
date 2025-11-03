@@ -109,7 +109,6 @@ export function InwardDetailsStep({ formData, onChange }: DetailsStepProps) {
 					value={formData.receivedFromType}
 					onValueChange={(value) => onChange({
 						receivedFromType: value as 'partner' | 'warehouse',
-						receivedFromId: '', // Reset selection when type changes
 					})}
 					name="received-from-type"
 					className='flex-wrap mb-1'
