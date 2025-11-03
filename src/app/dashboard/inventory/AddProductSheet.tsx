@@ -312,9 +312,8 @@ export function AddProductSheet({ open, onOpenChange, onProductAdded }: AddProdu
 								<SelectContent>
 									<SelectItem value="Meters">Meters</SelectItem>
 									<SelectItem value="Yards">Yards</SelectItem>
+									<SelectItem value="Kg">Kg</SelectItem>
 									<SelectItem value="Pieces">Pieces</SelectItem>
-									<SelectItem value="Kilograms">Kilograms</SelectItem>
-									<SelectItem value="Rolls">Rolls</SelectItem>
 								</SelectContent>
 							</Select>
 						</div>
