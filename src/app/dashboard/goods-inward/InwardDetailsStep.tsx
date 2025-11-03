@@ -48,21 +48,29 @@ export function InwardDetailsStep({ formData, onChange }: DetailsStepProps) {
 				}
 
 				// Fetch partners (suppliers and vendors)
-				const { data: suppliersData } = await supabase
+				const { data: suppliersData, error: suppliersError } = await supabase
 					.from('partners')
 					.select('*')
 					.eq('company_id', currentUser.company_id)
 					.eq('partner_type', 'supplier')
 					.is('deleted_at', null)
-					.order('first_name', { ascending: true});
+					.order('first_name', { ascending: true });
 
-				const { data: vendorsData } = await supabase
+				if (suppliersError) {
+					console.error('Error fetching suppliers:', suppliersError);
+				}
+
+				const { data: vendorsData, error: vendorsError } = await supabase
 					.from('partners')
 					.select('*')
 					.eq('company_id', currentUser.company_id)
 					.eq('partner_type', 'vendor')
 					.is('deleted_at', null)
 					.order('first_name', { ascending: true });
+
+				if (vendorsError) {
+					console.error('Error fetching vendors:', vendorsError);
+				}
 
 				const partnersData = [...(suppliersData || []), ...(vendorsData || [])];
 
